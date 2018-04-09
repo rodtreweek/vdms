@@ -1,0 +1,16 @@
+env = Environment(CPPPATH= ['include', 'src',
+				'/opt/intel/pmgd/include',
+				'/opt/intel/pmgd/util',],
+				CXXFLAGS="-std=c++11")
+
+
+source_files = ['src/misc_loaders.cc',
+				'src/yfcc_csv_reader.cc',
+				'src/yfcc.cc',
+				]
+
+
+env.Program('yfcc', source_files,
+			LIBS = ['pmgd', 'pmgd-util', 'jsoncpp'],
+			LIBPATH = ['/opt/intel/pmgd/lib/']
+			)
