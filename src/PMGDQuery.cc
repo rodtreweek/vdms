@@ -257,7 +257,7 @@ Json::Value PMGDQuery::parse_response(PMGDCmdResponse* response)
                 Json::Value list(Json::arrayValue);
                 auto& mymap = response->prop_values();
 
-                assert(mymap.size() > 0);
+                // assert(mymap.size() > 0);
 
                 uint64_t count = response->op_int_value();
 
