@@ -1,0 +1,21 @@
+intel_root='/opt/intel/'
+
+env = Environment(CPPPATH= ['include', 'src',
+						intel_root + 'vcl/include'],
+						CXXFLAGS="-std=c++11 -O3")
+
+env.Program('tiledbLoader', 'src/tiledbLoader.cc',
+			LIBS = [
+				'vcl', 'pthread',
+				'opencv_core', 'tiledb',
+				'z' , 'crypto' ,
+				'lz4' , 'zstd' ,
+				'blosc', 'mpi',
+				'opencv_imgcodecs',
+				'opencv_highgui',
+				'opencv_imgproc'
+				],
+			LIBPATH = ['/usr/lib/x86_64-linux-gnu/',
+                       intel_root + 'vcl/',
+					   ]
+			)

@@ -1,0 +1,5 @@
+This program loads the TCIA csv files and creates a
+PMGD database.
+
+The node tags names are defined in TCIALoader.cc.
+

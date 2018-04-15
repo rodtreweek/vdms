@@ -1,0 +1,4 @@
+system,memsql+http+opencv,vdms
+Query1,31.09,36.85
+Query2,221.13,417.75
+Query3,212.95,962.56

@@ -1,0 +1,9 @@
+bcr_patient_uuid	bcr_patient_barcode	new_tumor_event_dx_days_to	new_tumor_event_surgery	new_tumor_event_surgery_days_to_loco	new_tumor_event_surgery_met	new_tumor_event_surgery_days_to_met	new_tumor_event_radiation_tx	new_tumor_event_pharmaceutical_tx
+bcr_patient_uuid	bcr_patient_barcode	days_to_new_tumor_event_after_initial_treatment	additional_surgery_locoregional_procedure	days_to_additional_surgery_locoregional_procedure	additional_surgery_metastatic_procedure	days_to_additional_surgery_metastatic_procedure	additional_radiation_therapy	additional_pharmaceutical_therapy
+CDE_ID:	CDE_ID:2673794	CDE_ID:3392464	CDE_ID:3008755	CDE_ID:3408572	CDE_ID:3008757	CDE_ID:3408682	CDE_ID:3427615	CDE_ID:3427616
+669605F6-39A1-4F8C-81DC-39430FF5F892	TCGA-DU-A5TP	203	YES	203	[Not Available]	[Not Available]	NO	NO
+4C167F09-D664-425F-BD84-6FF8C21B272B	TCGA-DU-A5TW	[Not Available]	[Not Available]	[Not Available]	NO	[Not Available]	[Not Available]	[Not Available]
+3BAA0015-885C-487A-9076-236F404FEB3E	TCGA-DU-A6S6	2267	YES	2267	[Not Available]	[Not Available]	NO	YES
+E30F1994-3622-43D0-BEC2-6D7E2D9881D2	TCGA-FG-A4MT	499	YES	637	[Not Available]	[Not Available]	YES	NO
+f625e522-226b-450f-af94-dd2f5adb605e	TCGA-HT-8564	120	YES	120	[Not Available]	[Not Available]	YES	YES
+E0F8E70A-AC91-4D3C-806C-BA9C14ED43AB	TCGA-HT-A617	395	YES	395	[Not Available]	[Not Available]	[Unknown]	[Unknown]

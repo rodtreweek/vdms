@@ -1,0 +1,15 @@
+// Athena Config File
+// This is the run-time config file
+// Sets database paths and other parameters
+
+{
+    // Network
+    "port": 55555, // Default is 55555
+    "max_simultaneous_clients": 20, // Default is 500
+
+    // Database paths
+    "pmgd_path": "hls_graph_10/hls-graph",
+    "png_path": "hls_graph_10/images/pngs/",
+    "jpg_path": "hls_graph_10/images/jpgs/",
+    "tdb_path": "hls_graph_10/images/tiledb/tdb/"
+}

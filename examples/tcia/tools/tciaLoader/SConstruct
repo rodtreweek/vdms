@@ -1,0 +1,20 @@
+intel_root='/opt/intel/'
+
+env = Environment(CPPPATH= ['include', 'src',
+                        # intel_root + 'athena/utils/include',
+                        intel_root + 'pmgd/include',
+                        intel_root + 'pmgd/util',],
+                        CXXFLAGS="-std=c++11 -O3")
+
+source_files = ['src/TCIALoader.cc',
+                'src/tciadbCreator.cc',
+                ]
+
+env.Program('tciadbCreator', source_files,
+            LIBS = ['pmgd', 'pmgd-util', 'jsoncpp'],
+            LIBPATH = ['/usr/lib/x86_64-linux-gnu/',
+                        intel_root + 'pmgd/lib/',
+                        # intel_root + 'athena/utils/',
+                       ]
+            )
+

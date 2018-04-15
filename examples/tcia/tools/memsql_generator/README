@@ -1,0 +1,5 @@
+This programs generates mem-sql tables from a jarvis database 
+based on the TCIA structure.
+
+The node tags names are defined in TCIALoader.cc.
+

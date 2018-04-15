@@ -1,0 +1,18 @@
+// Athena Config File
+// This is the run-time config file
+// Sets database paths and other parameters
+
+{
+    // Network
+    "port": 55559, // Default is 55555
+
+    // Database paths
+    "pmgd_path": "hls_graph_10/hls-graph/",
+    "tiledb_database": "hls_graph_10/tiledb/hls/",
+    "png_database": "hls_graph_10/native_format/pngs/",
+    "jpg_database": "hls_graph_10/native_format/jpgs/", // Not supported
+    "videos_database": "./videos_db",        // Not supported
+
+    "support_info": "Vishakha Gupta",
+    "support_phone": "1-800-Vishakha"
+}
