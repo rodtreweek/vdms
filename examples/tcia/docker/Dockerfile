@@ -24,46 +24,74 @@ RUN apt-get remove -y libprotobuf-dev protobuf-compiler
 RUN cd / && git clone https://github.com/google/protobuf.git
 RUN cd protobuf && git checkout v3.3.0 && ./autogen.sh && ./configure --prefix=/usr/local && make -j $(cat /proc/cpuinfo | wc -l) && make install && ldconfig
 RUN rm -rf /protobuf
+
+# Blosc
 RUN cd / && git clone https://github.com/Blosc/c-blosc.git
 RUN cd c-blosc && mkdir build && cd build && cmake -DCMAKE_INSTALL_PREFIX='/usr' .. && cmake --build . && ctest && cmake --build . --target install
 RUN rm -rf /c-blosc
+
+# Zstd
 RUN cd / && wget https://github.com/facebook/zstd/archive/v1.1.0.tar.gz && tar xf v1.1.0.tar.gz
 RUN cd zstd-1.1.0 && make install PREFIX='/usr'
 RUN cd /usr/src/gtest && cmake . && make && mv libgtest* /usr/lib/
+
+# TileDB
 RUN cd / && wget https://github.com/TileDB-Inc/TileDB/archive/0.6.1.tar.gz && tar xf 0.6.1.tar.gz
 RUN cd TileDB-0.6.1 && mkdir build && cd build && cmake .. && make -j $(cat /proc/cpuinfo | wc -l) && make install
 RUN rm -rf /TileDB-0.6.1
 
+# Valijson
+RUN cd / && git clone https://github.com/tristanpenman/valijson.git
+RUN cd valijson && cp -r include/* /usr/local/include/
+
+# OpenCV
 RUN mkdir /opencv && cd /opencv && wget -O opencv.zip https://github.com/opencv/opencv/archive/3.3.0.zip
 RUN cd /opencv && unzip opencv.zip && cd opencv-3.3.0 && mkdir build && cd build && cmake -D CMAKE_BUILD_TYPE=Release -D CMAKE_INSTALL_PREFIX=/usr/local .. && make -j $(cat /proc/cpuinfo | wc -l) && make install && rm -rf /opencv
 
+RUN pip install --upgrade pip
+RUN pip install protobuf
+RUN pip install notebook
+
 # VCL install
-RUN cd / && wget https://github.intel.com/labs-csr/vcl/archive/v0.1.0.tar.gz && tar xf v0.1.0.tar.gz
+RUN cd / && wget https://github.com/intellabs/vcl/archive/v0.1.0.tar.gz && tar xf v0.1.0.tar.gz
 RUN mv vcl-0.1.0 vcl && cd vcl && scons -j16
-RUN rm -rf v0.1.0.tar.gz
 
 # PMGD install
-RUN cd / && wget https://github.intel.com/labs-csr/pmgd/archive/v0.1.0.tar.gz && tar xf v0.1.0.tar.gz
-RUN mv pmgd-0.1.0 jarvis && cd jarvis && make
-RUN rm -rf v0.1.0.tar.gz
+RUN cd / && wget https://github.com/intellabs/pmgd/archive/v1.0.0.tar.gz && tar xf v1.0.0.tar.gz
+RUN mv pmgd-1.0.0 pmgd && cd pmgd && make
+RUN rm -rf /*.tar.gz
 
-# Athena install
-RUN cd / && wget https://github.intel.com/labs-csr/athena/archive/v0.2.0.tar.gz && tar xf v0.2.0.tar.gz
-RUN mv athena-0.2.0 athena && cd athena && mkdir db && scons -j16 INTEL_PATH=../
-RUN rm -rf v0.2.0.tar.gz
+# VDMS install
+RUN cd / && git clone https://github.com/intellabs/vdms.git
+RUN cd vdms && git checkout examples_tcia && scons -j123 INTEL_PATH=/
+# RUN cd vdms && scons -j123 INTEL_PATH=/
 
-COPY data.tar.bz2 /
-RUN bzcat /data.tar.bz2 | tar -C / -xf - && rm data.tar.bz2
-
+RUN rm -rf /*.tar.gz
 RUN rm -rf /var/lib/apt/lists/* /root/.cache
 
-RUN mv /athena_for_docker /data
-RUN chmod 700 /data/hls/clean.sh
-RUN echo '#!/bin/bash' > /start.sh
-RUN echo 'export LD_LIBRARY_PATH=/jarvis/lib:$(find /usr/local/lib/ / -type f -name "*.so" | xargs dirname | sort | uniq | tr "\n" ":")' >> /start.sh
+COPY data.tgz /
+COPY run_medical_server.sh /vdms/examples/tcia
+RUN chmod 755 /vdms/examples/tcia/run_medical_server.sh
 
-RUN  echo 'cd /data/hls/' >> /start.sh
-RUN  echo './clean.sh' >> /start.sh
+RUN echo '#!/bin/bash' > /start.sh
+RUN echo 'export LD_LIBRARY_PATH=/pmgd/lib:$(find /usr/local/lib/ / -type f -name "*.so" | xargs dirname | sort | uniq | tr "\n" ":")' >> /start.sh
+RUN echo 'cd /vdms/examples/tcia' >> /start.sh
+RUN echo 'sh run_medical_server.sh &' >> /start.sh
+RUN echo 'cd /vdms/client/python/vdms' >> /start.sh
+RUN echo 'cp -r /vdms/examples/tcia/pyClient/* .' >> /start.sh
+RUN echo 'export PYTHONPATH=$PYTHONPATH:/vdms/client/python/' >> /start.sh
+RUN echo 'jupyter notebook --port=8888 --no-browser --allow-root --ip=0.0.0.0' >> /start.sh
 RUN chmod 755 /start.sh
-ENTRYPOINT "/start.sh"
+
+# Add Tini. Tini operates as a process subreaper for jupyter.
+# This prevents kernel crashes.
+ENV TINI_VERSION v0.6.0
+ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /usr/bin/tini
+RUN chmod +x /usr/bin/tini
+ENTRYPOINT ["/usr/bin/tini", "--"]
+
+EXPOSE 8888
+EXPOSE 55555
+# ENTRYPOINT ["/start.sh"]
+CMD ["/start.sh"]
 

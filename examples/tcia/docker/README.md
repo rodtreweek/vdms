@@ -1,7 +1,8 @@
-# VDMS Docker Sample App: The Cancer Image Archive
+# Athena Docker Sample App: The Cancer Image Archive
 
-VDMS server docker image to intel’s docker hub. 
-The image is hub.docker.com/intellabs/vdms:hls 
+Athena server docker image to intel’s docker hub. 
+The image is hub.docker.intel.com/athena-hls/hls:v1.0 
+You’ll first want to do “docker login hub.docker.intel.com” and sign in with your credentials before pulling this image.
 
 You need to have a compress file with the HLS database.
 (contact luis.remis@intel.com to have access to that file) 
