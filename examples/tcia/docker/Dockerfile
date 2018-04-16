@@ -69,14 +69,13 @@ RUN cd vdms && git checkout examples_tcia && scons -j123 INTEL_PATH=/
 RUN rm -rf /*.tar.gz
 RUN rm -rf /var/lib/apt/lists/* /root/.cache
 
-COPY data.tgz /
-COPY run_medical_server.sh /vdms/examples/tcia
-RUN chmod 755 /vdms/examples/tcia/run_medical_server.sh
+COPY data.tgz /vdms/examples/tcia
+# RUN chmod 755 /vdms/examples/tcia/run_medical_server.sh
 
 RUN echo '#!/bin/bash' > /start.sh
 RUN echo 'export LD_LIBRARY_PATH=/pmgd/lib:$(find /usr/local/lib/ / -type f -name "*.so" | xargs dirname | sort | uniq | tr "\n" ":")' >> /start.sh
 RUN echo 'cd /vdms/examples/tcia' >> /start.sh
-RUN echo 'sh run_medical_server.sh &' >> /start.sh
+RUN echo 'sh clean_run_server.sh &' >> /start.sh
 RUN echo 'cd /vdms/client/python/vdms' >> /start.sh
 RUN echo 'cp -r /vdms/examples/tcia/pyClient/* .' >> /start.sh
 RUN echo 'export PYTHONPATH=$PYTHONPATH:/vdms/client/python/' >> /start.sh
