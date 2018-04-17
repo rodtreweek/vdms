@@ -10,5 +10,5 @@
     "pmgd_path": "hls_graph_1/hls-graph",
     "png_path": "hls_graph_1/images/pngs/",
     "jpg_path": "hls_graph_1/images/jpgs/",
-    "tdb_path": "hls_graph_1/images/tiledb/tdb"
+    "tdb_path": "hls_graph_1/images/tiledb/tdb/"
 }
