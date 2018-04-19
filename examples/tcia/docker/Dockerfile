@@ -62,22 +62,20 @@ RUN mv pmgd-1.0.0 pmgd && cd pmgd && make
 RUN rm -rf /*.tar.gz
 
 # VDMS install
-RUN cd / && git clone https://github.com/intellabs/vdms.git
-RUN cd vdms && git checkout examples_tcia && scons -j123 INTEL_PATH=/
-# RUN cd vdms && scons -j123 INTEL_PATH=/
+RUN cd / && git clone https://github.com/intellabs/vdms.git && cd vdms && git checkout examples_tcia && scons -j13 INTEL_PATH=/
 
 RUN rm -rf /*.tar.gz
 RUN rm -rf /var/lib/apt/lists/* /root/.cache
 
 COPY data.tgz /vdms/examples/tcia
-# RUN chmod 755 /vdms/examples/tcia/run_medical_server.sh
 
 RUN echo '#!/bin/bash' > /start.sh
 RUN echo 'export LD_LIBRARY_PATH=/pmgd/lib:$(find /usr/local/lib/ / -type f -name "*.so" | xargs dirname | sort | uniq | tr "\n" ":")' >> /start.sh
 RUN echo 'cd /vdms/examples/tcia' >> /start.sh
 RUN echo 'sh clean_run_server.sh &' >> /start.sh
 RUN echo 'cd /vdms/client/python/vdms' >> /start.sh
-RUN echo 'cp -r /vdms/examples/tcia/pyClient/* .' >> /start.sh
+RUN echo 'cp -r /vdms/examples/tcia/sample_queries/* .' >> /start.sh
+RUN echo 'cp -r /vdms/examples/tcia/pyClient/images .' >> /start.sh
 RUN echo 'export PYTHONPATH=$PYTHONPATH:/vdms/client/python/' >> /start.sh
 RUN echo 'jupyter notebook --port=8888 --no-browser --allow-root --ip=0.0.0.0' >> /start.sh
 RUN chmod 755 /start.sh
