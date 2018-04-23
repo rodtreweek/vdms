@@ -77,7 +77,7 @@ RUN echo 'mkdir db/images' >> /start.sh
 RUN echo 'mkdir db/images/pngs' >> /start.sh
 RUN echo 'mkdir db/images/jpgs' >> /start.sh
 RUN echo 'mkdir db/images/tiledb' >> /start.sh
-RUN echo './yfcc --media yfcc100m_dataset_short_10k yfcc100m_pmgd' >> /start.sh
+RUN echo './yfcc --media data/yfcc100m_dataset data/yfcc100m_docker_pmgd' >> /start.sh
 RUN echo '../../vdms &' >> /start.sh
 RUN echo 'cd /vdms' >> /start.sh
 RUN echo 'export PYTHONPATH=$PYTHONPATH:/vdms/client/python/' >> /start.sh
