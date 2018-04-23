@@ -83,6 +83,9 @@ RUN echo 'cd /vdms' >> /start.sh
 RUN echo 'export PYTHONPATH=$PYTHONPATH:/vdms/client/python/' >> /start.sh
 RUN echo 'jupyter notebook --port=8888 --no-browser --allow-root --ip=0.0.0.0' >> /start.sh
 RUN chmod 755 /start.sh
+#RUN /start.sh &
+
+#RUN jupyter notebook --generate-config
 
 # Add Tini. Tini operates as a process subreaper for jupyter. This prevents
 # kernel crashes.
@@ -90,6 +93,11 @@ ENV TINI_VERSION v0.6.0
 ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /usr/bin/tini
 RUN chmod +x /usr/bin/tini
 ENTRYPOINT ["/usr/bin/tini", "--"]
+#ENTRYPOINT "/start.sh"
 
 EXPOSE 8888
+# CMD ["jupyter", "notebook", "--port=8888", "--no-browser", "--allow-root", "--ip=0.0.0.0"]
 CMD ["/start.sh"]
+
+#ENTRYPOINT "jupyter notebook --no-browser"
+
