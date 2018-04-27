@@ -250,7 +250,7 @@ TEST(QueryHandler, AddAndFind)
         if (cmd=="AddEntity")
           in_node_num++;
 
-        else if (cmd == "Connect")
+        else if (cmd == "AddConnection")
           in_edge_num++;
 
         else if (cmd == "FindEntity") {
@@ -295,7 +295,7 @@ TEST(QueryHandler, AddAndFind)
 
         if (cmd=="AddEntity")
             out_node_num++;
-        if (cmd=="Connect")
+        if (cmd=="AddConnection")
             out_edge_num++;
         if (cmd =="FindEntity")
             out_query_num++;
