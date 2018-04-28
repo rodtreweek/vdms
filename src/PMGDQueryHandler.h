@@ -47,6 +47,8 @@ namespace VDMS {
     typedef PMGD::protobufs::PropertyPredicate PMGDPropPred;
     typedef PMGD::protobufs::PropertyList      PMGDPropList;
     typedef PMGD::protobufs::Property          PMGDProp;
+    typedef PMGD::protobufs::Constraints       PMGDQueryConstraints;
+    typedef PMGD::protobufs::ResultInfo        PMGDQueryResultInfo;
     typedef PMGD::protobufs::QueryNode         PMGDQueryNode;
     typedef PMGD::protobufs::CommandResponse   PMGDCmdResponse;
     typedef PMGD::protobufs::ResponseType      PMGDRespType;
@@ -88,10 +90,11 @@ namespace VDMS {
         int add_edge(const PMGD::protobufs::AddEdge &ce, PMGDCmdResponse *response);
         template <class Element> void set_property(Element &e, const PMGDProp&p);
         int query_node(const PMGDQueryNode &qn, PMGDCmdResponse *response);
+        int query_edge(const PMGDQueryEdge &qn, PMGDCmdResponse *response);
         PMGD::PropertyPredicate construct_search_term(const PMGDPropPred &p_pp);
         PMGD::Property construct_search_property(const PMGDProp&p);
         template <class Iterator> void build_results(Iterator &ni,
-                                                    const PMGDQueryNode &qn,
+                                                    const PMGDQueryResultInfo &qn,
                                                     PMGDCmdResponse *response);
         void construct_protobuf_property(const PMGD::Property &j_p, PMGDProp*p_p);
         void construct_missing_property(PMGDProp *p_p);
