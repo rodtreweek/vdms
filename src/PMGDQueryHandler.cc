@@ -159,6 +159,9 @@ int PMGDQueryHandler::process_query(const PMGDCmd *cmd,
             case PMGDCmd::QueryNode:
                 retval = query_node(cmd->query_node(), response);
                 break;
+            case PMGDCmd::QueryEdge:
+                retval = query_edge(cmd->query_edge(), response);
+                break;
             case PMGDCmd::UpdateNode:
                 update_node(cmd->update_node(), response);
                 break;
@@ -470,6 +473,53 @@ int PMGDQueryHandler::query_node(const protobufs::QueryNode &qn,
     return 0;
 }
 
+int PMGDQueryHandler::query_edge(const protobufs::QueryEdge &qe,
+                                    PMGDCmdResponse *response)
+{
+    ReusableNodeIterator *start_ni = NULL;
+    PMGD::Direction dir;
+    StringID edge_tag;
+    const PMGDQueryConstraints &qc = qe.constraints();
+    const PMGDQueryResultInfo &qr = qe.results();
+
+    if (qc.p_op() == protobufs::Or) {
+        set_response(response, PMGDCmdResponse::Error,
+                       "Or operation not implemented\n");
+        return -1;
+    }
+
+    long id = qe.identifier();
+    if (id >= 0 && _cached_edges.find(id) != _cached_edges.end()) {
+        set_response(response, PMGDCmdResponse::Error,
+                       "Reuse of _ref value\n");
+        return -1;
+    }
+
+    StringID search_edge_tag = (qc.tag_oneof_case() == PMGDQueryConstraints::kTagid)
+                                ? StringID(qc.tagid())
+                                : StringID(qc.tag().c_str());
+
+    SearchExpression search(*_db, search_edge_tag);
+
+    for (int i = 0; i < qc.predicates_size(); ++i) {
+        const PMGDPropPred &p_pp = qc.predicates(i);
+        PropertyPredicate j_pp = construct_search_term(p_pp);
+        search.add(j_pp);
+    }
+
+    EdgeIterator ei = search.eval_edges();
+    if (!bool(ei)) {
+        set_response(response, PMGDCmdResponse::Empty,
+                       "Null search iterator\n");
+        return -1;
+    }
+
+    // Set these in case there is no results block.
+    set_response(response, qr.r_type(), PMGDCmdResponse::Success);
+    build_results<EdgeIterator>(ei, qr, response);
+    return 0;
+}
+
 PropertyPredicate PMGDQueryHandler::construct_search_term(const PMGDPropPred &p_pp)
 {
     StringID key = (p_pp.key_oneof_case() == 2) ? StringID(p_pp.keyid()) : StringID(p_pp.key().c_str());
@@ -520,6 +570,11 @@ namespace VDMS {
     template
     void PMGDQueryHandler::build_results<PMGDQueryHandler::ReusableNodeIterator>(
                                                   PMGDQueryHandler::ReusableNodeIterator &ni,
+                                                  const protobufs::ResultInfo &qn,
+                                                  PMGDCmdResponse *response);
+    template
+    void PMGDQueryHandler::build_results<PMGD::EdgeIterator>(
+                                                  PMGD::EdgeIterator &ni,
                                                   const protobufs::ResultInfo &qn,
                                                   PMGDCmdResponse *response);
 };

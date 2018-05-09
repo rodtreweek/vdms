@@ -50,6 +50,7 @@ namespace VDMS {
     typedef PMGD::protobufs::Constraints       PMGDQueryConstraints;
     typedef PMGD::protobufs::ResultInfo        PMGDQueryResultInfo;
     typedef PMGD::protobufs::QueryNode         PMGDQueryNode;
+    typedef PMGD::protobufs::QueryEdge         PMGDQueryEdge;
     typedef PMGD::protobufs::CommandResponse   PMGDCmdResponse;
     typedef PMGD::protobufs::ResponseType      PMGDRespType;
     typedef PMGDCmdResponse::ErrorCode         PMGDCmdErrorCode;
@@ -82,6 +83,7 @@ namespace VDMS {
         // of finding out if the reference is for an AddNode or a QueryNode
         // and rather than searching multiple maps, we keep it uniform here.
         std::unordered_map<int, ReusableNodeIterator *> _cached_nodes;
+        std::unordered_map<int, PMGD::EdgeIterator *> _cached_edges;
 
         int process_query(const PMGDCmd *cmd, PMGDCmdResponse *response);
         void error_cleanup(std::vector<PMGDCmdResponses> &responses, PMGDCmdResponse *last_resp);
