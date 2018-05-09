@@ -551,3 +551,33 @@ void PMGDQuery::QueryNode(int ref,
     _cmds.push_back(cmdquery);
 }
 
+void PMGDQuery::QueryEdge(int ref,
+                          const std::string& tag,
+                          const Json::Value& link,
+                          const Json::Value& constraints,
+                          const Json::Value& results,
+                          bool unique)
+{
+    PMGDCmd* cmdquery = new PMGDCmd();
+    cmdquery->set_cmd_id(PMGDCmd::QueryEdge);
+    cmdquery->set_cmd_grp_id(_current_group_id);
+
+    PMGDQueryEdge *qn = cmdquery->mutable_query_edge();
+
+    qn->set_identifier(ref);
+
+    PMGDQueryConstraints *qc = qn->mutable_constraints();
+    qc->set_tag(tag);
+    qc->set_unique(unique);
+
+    // TODO: We always assume AND, we need to change that
+    qc->set_p_op(PMGD::protobufs::And);
+    if (!constraints.isNull())
+        parse_query_constraints(constraints, qc);
+
+    PMGDQueryResultInfo *qr = qn->mutable_results();
+    if (!results.isNull())
+        parse_query_results(results, qr);
+
+    _cmds.push_back(cmdquery);
+}

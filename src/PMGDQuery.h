@@ -108,5 +108,12 @@ namespace VDMS {
                     const Json::Value& constraints,
                     const Json::Value& results,
                     bool unique = false);
+
+        void QueryEdge(int ref,
+                    const std::string& tag,
+                    const Json::Value& link,
+                    const Json::Value& constraints,
+                    const Json::Value& results,
+                    bool unique = false);
     };
 }
